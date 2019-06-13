@@ -1,4 +1,7 @@
 #include <stdio.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <sys/types.h>
 
 int fibonacci(int n) {
   if (n == 0) return 0;
@@ -18,18 +21,24 @@ int leerEntero(char *fn) {
   FILE *fp;
   int n;
   fp = fopen(fn, "r");
-  fscan(fp, "%d" ,$n);
+  fscanf(fp, "%d" ,&n);
   fclose(fp);
   return n;
 }
 
-int main(int argc, char** argv) {
-  int x = 20;
-  guardarEntero("hola.txt" ,100);
+int main(int argc, char** argv) {                                              
+  int x  = 30;                                                                 
+  pid_t pid;                                                                   
+                                                                               
+  pid = fork();                                                                
+  if( pid == 0){                                                               
+    int f = fibonacci(x);           
+    guardarEntero("hola",f);
+    printf("%d\n",f);
+  } else{
+    int status;
+    wait(&status);
+    status = leerEntero("hola");
+    printf("%d",status*100);                                                   
 }
-
-int main(int argc, char** argv) {
-  printf("%d\n", fibonacci(3));
-  printf("%d\n", fibonacci(4));
-  printf("%d\n", fibonacci(5));
 }
